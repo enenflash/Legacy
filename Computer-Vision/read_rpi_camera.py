@@ -1,35 +1,18 @@
-from picamera.array import PiRGBArray 
-from picamera import PiCamera 
-import time 
-import cv2 
-
-# i have no idea if this would work at all but ill put it here anyway.
-
-# opencv does not natively support the raspberry pi camera (v2) and it seems like it only 
-# supports usb cameras. so we might need to use this so that opencv can read it.
-
-
-#Instantiate and configure picamera 
-camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 32
-raw_capture = PiRGBArray(camera, size=(640, 480))
-
-#let camera module warm up 
-time.sleep(0.1)
-
-# define an OpenCV window to display  video
-cv2.namedWindow("Frame")
-
-#Capture continuous frames to access video
-for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
-    image = frame.array
-    cv2.imshow("Frame", image)
-    key = cv2.waitKey(1) & 0xFF
-    raw_capture.truncate(0)
-    #if 'q' is pressed, close OpenCV window and end video
-    if key != ord('q'):
-        pass
-    else:
-        cv2.destroyAllWindows()
-        break
+import cv2
+import time
+from picamera2 import Picamera2
+picam2 = Picamera2()
+picam2.preview_configuration.main.size=(800, 800)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.start()
+# opencv does not support the raspberry pi camera normally
+# so we have to use this other picamera2 library to read it
+# and then pass it onto opencv
+while True:
+	im = picam2.capture_array()
+	im = cv2.resize(im, (0,0), fx = 0.5, fy = 0.5)
+	cv2.imshow("preview", im)
+	if cv2.waitKey(1)==ord('q'):
+		break
+picam2.stop()
+cv2.destroyAllWindows()
