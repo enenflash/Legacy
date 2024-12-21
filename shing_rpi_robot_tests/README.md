@@ -1,0 +1,1 @@
+these stuff here are stuff that Shing tests on the raspberry pi robot (not code for our actual, final robot)
