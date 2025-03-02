@@ -5,7 +5,7 @@ import numpy as np
 # No video output
 # Initialize Picamera2
 picam2 = Picamera2()
-camera_config = picam2.create_preview_configuration(main={"format": "RGB888", "size": (640, 480)})
+camera_config = picam2.create_preview_configuration(main={"format": "RGB888", "size": (1920, 1080)})
 picam2.configure(camera_config)
 picam2.start()
 
