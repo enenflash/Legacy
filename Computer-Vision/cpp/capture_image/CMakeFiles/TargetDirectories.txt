@@ -1,3 +1,0 @@
-/home/robot/Legacy/Computer-Vision/cpp/capture_image/CMakeFiles/capture_image.dir
-/home/robot/Legacy/Computer-Vision/cpp/capture_image/CMakeFiles/edit_cache.dir
-/home/robot/Legacy/Computer-Vision/cpp/capture_image/CMakeFiles/rebuild_cache.dir
