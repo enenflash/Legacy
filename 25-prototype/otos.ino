@@ -11,8 +11,8 @@ class Otos {
   void setUp() {
     myOtos.calibrateImu();
     myOtos.setLinearUnit(0);
-    myOtos.setLinearScalar(1.08);
-    myOtos.setAngularScalar(0.995);
+    //myOtos.setLinearScalar(1.08);
+    //myOtos.setAngularScalar(0.995);
     sfe_otos_pose2d_t offset = {0, 0.05, 0};
     myOtos.setOffset(offset);
     myOtos.resetTracking();
@@ -45,7 +45,7 @@ class Otos {
     sfe_otos_pose2d_t myPosition;
     myOtos.getPosition(myPosition);
 
-    Serial.println("\nNote: This is Without Drift Equasions")
+    Serial.println("\nNote: This is Without Drift Equasions");
     Serial.print("X: ");
     Serial.println(myPosition.x * 100);
     Serial.print("Y: ");

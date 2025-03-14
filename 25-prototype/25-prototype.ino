@@ -1,7 +1,7 @@
 /*
 Teamname: Legacy
 Authors: Isabelle Tang, Ryan Beikrasouli & Shing Feng 
-Date of Creation: 11/1/25
+Date of Creation: 11/1/2025
 */
 
 /* ##### LIBRARIES ##### */
@@ -50,6 +50,7 @@ using namespace std;
 
 // Robot Settings
 const bool USING_OTOS = true;
+const bool DEFEND_OFTEN = true;
 
 // History lengths
 const int DIR_HIST_LENGTH = 5;
@@ -59,12 +60,15 @@ const int ULT_HIST_LENGTH = 5;
 // Strength distances
 const int MIN_CLOSE_STRENGTH = 35;
 const int ULTRASONIC_TO_ROBOT = 10;
-const int MINIMUM_STRENGTH_DIFFERANCE = 10;
+const int MINIMUM_STRENGTH_DIFFERANCE = 5;
 
 // Positions
 const float GOAL_POS_X = FIELD_WIDTH/2.0;
 const float GOAL_POS_Y = 30.0;
-const int LINE_LIMIT = 30;
+const int LINE_LIMIT = 35;
+const int DEFEND_POS_Y = 180;
+const int DEFEND_POS_X = 91.5;
+
 
 // Speeds 
 // Note: Slowest Possible Speed is 10%
@@ -96,5 +100,9 @@ std::map<int, float> irAngles = {
 const float PROPORTIONAL_CONSTANT = 4.0;
 const float INTEGRAL_CONSTANT = 0.005;
 const float DERIVETIVE_CONSTANT = 0.1;
+
+// Other Constants
+const float ROBOT_DIAMETER = 19.2;
+const int MINIMUM_TEAMMATE_DISTANCE = round(5 + ROBOT_DIAMETER/2);
 
 

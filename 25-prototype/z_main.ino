@@ -169,9 +169,6 @@ void loop() {
     digitalWrite(13, LOW);
   }
 
-  // Updating Robot's Sensors
-  bot.update();
-
   // Checking Idle Status and Setting Initial Position
   if (startPos == "NONE" || !fieldWorthy) {
     if (!otosError && !switchError) {
@@ -180,6 +177,8 @@ void loop() {
     else {
       startPos = checkIdle(true);
     }
+    // Updating Robot's Sensors
+    bot.update(true);
     return;
   }
 
@@ -190,6 +189,9 @@ void loop() {
       digitalWrite(13, LOW);
     }
   }
+
+  // Updating Robot's Sensors
+  bot.update();
 
   // Starting Loop Timer
   startTime = micros();
@@ -216,6 +218,9 @@ void loop() {
     bot.offset = 0;
     bot.getBehindBall();
   }
+  
+  // Defending Goal (if needed)
+  bot.defendGoal(dt);
 
   // Staying Within the Lines
   bot.stopAtLine();
@@ -223,8 +228,7 @@ void loop() {
   // Adjusting Speed
   bot.adjustSpeed();
   
-  // Defending Goal (if needed)
-  bot.defendGoal(dt);
+  
 
   // Running the Robot
   bot.run();
@@ -232,6 +236,8 @@ void loop() {
   // Updating Loop Timer
   endTime = micros();
   dt = (endTime - startTime)/1000.0;
+  //printPosition();
+  printLine();
 }
 
 

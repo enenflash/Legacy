@@ -41,7 +41,7 @@ public:
 
 private:
   // Main Robot Functions
-  void getSensorData() {
+  void getSensorData(bool notOTOS=false) {
     // Getting IR Data
     ir.readData();
     direction = ir.getFilteredDirection();
@@ -55,7 +55,7 @@ private:
     }
     
     // Getting Data from OTOs and Accounting for Drift
-    if (useOTOS) {
+    if (useOTOS && !notOTOS) {
       xyh = otos.getXYH();
       ps.x = xyh[0] - (1.0 / 250.0) * totalX;     
       ps.y = xyh[1] - (1.0 / 55.0) * totalY;    
@@ -108,11 +108,23 @@ private:
     return strength > otherStr && abs(strength - otherStr) >= MINIMUM_STRENGTH_DIFFERANCE;
   };
 
+  float getHypotenuse(float a, float b) {
+    return sqrt(pow(a, 2) + pow(b, 2));
+  }
+
+  float getHypotenuse(int a, int b) {
+    return sqrt(pow(a, 2) + pow(b, 2));
+  }
+
+  float strengthToDistance() {
+    return -(31.0/12.0) * strength + 117.25;
+  };
+
   // Checking Defence Conditions
-  bool checkDefenceConditions(bool often = false) {
+  bool checkDefenceConditions() {
 
     // Conditions Not To Defend
-    if (otherDir == 0 || otherDef || ballBehind(direction) || direction == 0) {
+    if (otherDir == 0 || otherDef || ballBehind(direction) || (direction == 0 && otherDir == 0) || ballBehind(otherDir)) {
       return false;
     }
 
@@ -121,17 +133,33 @@ private:
       return true;
     }
 
+    // When Robot Can't See the Ball but Teammate Can
+    if (!ballBehind(otherDir) && direction == 0) {
+      return true;
+    }
+    else if (ballBehind(otherDir) && direction == 0) {
+      return false;
+    }
+
+    // Stop Robots Colliding
+    if (getHypotenuse(abs(x - otherX), abs(y - otherY)) < MINIMUM_TEAMMATE_DISTANCE){
+      if (y < otherY) {
+        return true;
+      }
+    }
+
+
     // Conditions When Defending Often
-    if (often) {
+    if (DEFEND_OFTEN) {
       // Defend if Ball Closer to and Infront of Teammate
       if (strengthDifferance(false) && !ballBehind(otherDir)) {
         return true;
       }
 
       // Ball Behind Temmate and Infront of Robot and Robot Closer to Goal than Ball
-      if (strengthDifferance(false) && ballBehind(otherDir) && (ps.y > 145 && strength < MIN_CLOSE_STRENGTH) && !ballBehind(direction)) {
-        return true;
-      }
+      // if (strengthDifferance(false) && ballBehind(otherDir) && (DEFEND_POS_Y - ps.x < strengthToDistance())) {
+      //   return true;
+      // }
     }
 
     // Not Defending by Default
@@ -140,9 +168,9 @@ private:
 
 public:
   // Updating Robot Information
-  void update() {
+  void update(bool idle=false) {
     // Get All Sensor Data
-    getSensorData();
+    getSensorData(idle);
 
     if (!USING_OTOS) ps.update(tilt * PI / 180);
 
@@ -216,7 +244,7 @@ public:
   };
 
   // Moving to Specific Coordiants Using PID
-  void moveTo(float TARGET_X, float TARGET_Y, float maxSpeed, double dt) {
+  bool moveTo(float TARGET_X, float TARGET_Y, float maxSpeed, double dt) {
     float dx = TARGET_X - ps.x;
     float dy = TARGET_Y - ps.y;
     float distance = sqrt(pow(dx, 2) + pow(dy, 2));
@@ -230,6 +258,7 @@ public:
       x = 0;
       y = 0;
       linearPid.integral = 0;
+      return true;
     }
 
     float speed = linearPid.compute(distance, dt);
@@ -239,45 +268,53 @@ public:
     }
 
     mc.setSpeed(speed);
+    return false;
   };
 
   // Defending the Goal
   void defendGoal(double dt) {
     defending = checkDefenceConditions();
     if (!defending) {
+      inPosition = false;
       return;
     }
-
+    
     offset = 0;
-    const int TARGET_GOAL_Y = 180;
-    const int TARGET_GOAL_X = 91.5;
-    const int TARGET_GOAL_BUFFER = 1;
 
     if (!inPosition) {
-      moveTo(TARGET_GOAL_X, TARGET_GOAL_Y, MAX_SPEED, dt);
+      if ((otherY < ps.y) && (otherX > ps.x - ROBOT_DIAMETER && otherX < ps.x + ROBOT_DIAMETER)) {
+        
+        if (ps.x <= FIELD_WIDTH/2.0) {
+          moveTo(30, ps.y, MAX_SPEED, dt);
+        }
+        else {
+          moveTo(FIELD_WIDTH-30, ps.y, MAX_SPEED, dt);
+        } 
+      }
+
+      else {
+        inPosition = moveTo(DEFEND_POS_X, DEFEND_POS_Y, MAX_SPEED, dt);
+      }
+      
     }
 
     else {
-      getBehindBall();
-      if ((ps.x > TARGET_GOAL_X + 26 && x > 0) || (ps.x < TARGET_GOAL_X - 26 && x < 0)) {
-        x = 0;
-      }
-
+      // getBehindBall();
+      // if ((ps.x > DEFEND_POS_X + 26 && x > 0) || (ps.x < DEFEND_POS_X - 26 && x < 0)) {
+      //   x = 0;
+      // }
+      x = 0;
       y = 0;
-    }
-
-    if (inRange(ps.x, TARGET_GOAL_X, TARGET_GOAL_BUFFER) && inRange(ps.y, TARGET_GOAL_Y, TARGET_GOAL_BUFFER)) {
-      inPosition = true;
-    }
-
-    else if (inPosition && (ps.x > TARGET_GOAL_X + 26 || ps.x < TARGET_GOAL_X - 26 || ps.y > TARGET_GOAL_Y + 5 || ps.y < TARGET_GOAL_Y - 5)) {
-      inPosition = false;
     }
   }
 
   // Adjusting Speed According To Situation
   void adjustSpeed() {
-
+    
+    // don't set speed if defending
+    if (defending) {
+      return;
+    }
     // Speed On The Line
     if (lineValue != 0 || OnLeftLine || OnRightLine || OnBackLine || OnFrontLine) {
 
@@ -306,7 +343,8 @@ public:
       } else {
         mc.setSpeed(BALL_BEHIND_SPEED);
       }
-    } else {
+    } 
+    else {
       mc.setSpeed(MAX_SPEED);
     }
   };
@@ -341,7 +379,7 @@ public:
       otos.setPos(91.5, 204, 0);
     } 
     else if (startPos == "DOWN") {
-      otos.setPos(91.5, 182, 0);
+      otos.setPos(91.5, 179, 0);
     } 
     else if (startPos == "LEFT") {
       otos.setPos(57, 192, 0);
@@ -356,18 +394,21 @@ public:
 
     // Stopping at Line Using OTOs and Colour Sensor
     if (useOTOS) {
+      // On left line
       if (((lineValue == 2 || lineValue == 3) && ps.x < FIELD_WIDTH / 2.0 && ps.x > 0) || (ps.x < LINE_LIMIT && ps.x > 0)) {
         x = 1;
         OnLeftLine = true;
         OnRightLine = false;
       }
 
-      else if (((lineValue == 2 || lineValue == 3) && ps.x > FIELD_WIDTH / 2.0) || ps.x > FIELD_WIDTH - LINE_LIMIT) {
+      // On right line
+      else if (((lineValue == 2 || lineValue == 3) && ps.x > FIELD_WIDTH / 2.0) || (ps.x > FIELD_WIDTH - LINE_LIMIT)) {
         x = -1;
         OnLeftLine = false;
         OnRightLine = true;
       }
 
+      // On neither side line
       else {
         OnLeftLine = false;
         OnRightLine = false;

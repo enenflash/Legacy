@@ -15,7 +15,7 @@ public:
 	void run(float speedPercent) {
     int pwmSpeed = (100 - abs(speedPercent)) / 100 * 255;
     
-    // Deriving Pwm Speed and Clockwise
+    // Deriving Pwm Speed and Direction
     if (speedPercent > 0) {
       digitalWrite(DIR_PIN, LOW);
     }
