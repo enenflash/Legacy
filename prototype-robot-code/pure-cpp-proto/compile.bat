@@ -1,0 +1,2 @@
+g++ -o robot main.cpp lib/vector/vector.cpp lib/motor_controller/motor_controller.cpp lib/motor/motor.cpp lib/position_system/position_system.cpp lib/otos/otos.cpp lib/ultrasonic_ps/ultrasonic_ps.cpp lib/ultrasonic/ultrasonic.cpp
+robot.exe

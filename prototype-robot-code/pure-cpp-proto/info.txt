@@ -1,0 +1,9 @@
+format of files should work with platformio
+
+when transfering to platformio project:
+> include header files in main.cpp 
+> #include <vector.hpp> // don't worry about file path
+> all hpp and cpp files should go in lib/
+> constants.hpp and pins.hpp should go in include/
+
+to compile and run with g++, run compile.bat
