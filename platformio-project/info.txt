@@ -1,0 +1,2 @@
+Create new platformio project
+Download all of this folder's contents and put in respective folders
