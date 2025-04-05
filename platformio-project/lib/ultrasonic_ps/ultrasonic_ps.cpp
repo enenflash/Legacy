@@ -17,7 +17,7 @@ bool UltrasonicPS::choose_ult() {
         this->reliable = false;
         return true;
     }
-
+    
     this->reliable = true;
 
     if (delta_distances[0] > 20) {

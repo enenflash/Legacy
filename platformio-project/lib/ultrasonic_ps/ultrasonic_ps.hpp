@@ -1,5 +1,5 @@
-#ifndef _ULTRASONICPS_HPP_
-#define _ULTRASONICPS_HPP_
+#ifndef _ULTRASONIC_PS_HPP_
+#define _ULTRASONIC_PS_HPP_
 
 #pragma once
 
@@ -8,8 +8,8 @@
 #include <string>
 #include <array>
 
-#include "pins.hpp"
-#include "constants.hpp"
+#include "pins.h"
+#include "constants.h"
 #include "vector.hpp"
 #include "ultrasonic.hpp"
 
@@ -24,13 +24,14 @@ class UltrasonicPS {
     float ult_distances[3] = { 0, 0, 0 };
     float previous_distances[3] = { 0, 0, 0 };
 
+    float x, y;
+
     bool equals_total_width(float left_dist, float right_dist);
     
     public:
     bool reliable = true;
     bool use_left = true;
 
-    float x, y;
     bool choose_ult();
     void update(float angle_offset);
     Vector get_posv();

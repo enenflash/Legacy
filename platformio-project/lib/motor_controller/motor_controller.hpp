@@ -1,5 +1,5 @@
-#ifndef _MOTORCONTROLLER_HPP_
-#define _MOTORCONTROLLER_HPP_
+#ifndef _MOTOR_CONTROLLER_HPP_
+#define _MOTOR_CONTROLLER_HPP_
 
 #pragma once
 
@@ -10,7 +10,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "pins.hpp"
+#include "pins.h"
 #include "vector.hpp"
 #include "motor.hpp"
 

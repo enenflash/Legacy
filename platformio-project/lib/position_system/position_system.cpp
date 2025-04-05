@@ -1,6 +1,9 @@
 #include "position_system.hpp"
 
 PositionSystem::PositionSystem(bool use_otos, bool use_ult) {
+    this->bno = Adafruit_BNO055(55);
+    this->bno_ok = false;
+
     this->use_otos = use_otos;
     this->use_ult = use_ult;
     
@@ -10,12 +13,8 @@ PositionSystem::PositionSystem(bool use_otos, bool use_ult) {
     this->tilt = 0;
 }
 
-Vector PositionSystem::get_relative_to(Vector other_posv) {
-    return Vector(other_posv.i-this->posv.i, other_posv.j-this->posv.j);
-}
-Vector PositionSystem::get_angle_to(Vector other_posv) {
-    Vector relative_vec = this->get_relative_to(other_posv);
-    return atan2(relative_vec.j, relative_vec.i);
+bool PositionSystem::check_bno_ok() {
+    return this->bno_ok;
 }
 
 Vector PositionSystem::get_posv() {
@@ -25,26 +24,31 @@ float PositionSystem::get_tilt() {
     return this->tilt;
 }
 
-Vector PositionSystem::get_opp_goal_posv() {
-    return this->get_relative_to(this->opp_goal_posv);
-}
-Vector PositionSystem::get_opp_goal_angle() {
-    return this->get_angle_to(this->opp_goal_posv);
+Vector PositionSystem::get_relative_to(Vector other_posv) {
+    return Vector(other_posv.i-this->posv.i, other_posv.j-this->posv.j);
 }
 
-Vector PositionSystem::get_own_goal_posv() {
+Vector PositionSystem::get_opp_goal_vec() {
+    return this->get_relative_to(this->opp_goal_posv);
+}
+Vector PositionSystem::get_own_goal_vec() {
     return this->get_relative_to(this->own_goal_posv);
 }
-Vector PositionSystem::get_own_goal_angle() {
-    return this->get_angle_to(this->own_goal_posv);
+
+void PositionSystem::setup() {
+    this->bno_ok = this->bno.begin();
+    this->bno.setExtCrystalUse(true);
 }
 
 void PositionSystem::update() {
     // get tilt from BNO or get tilt from parameter
-    this->tilt = 0;
+    sensors_event_t event;
+    this->bno.getEvent(&event);
+    this->tilt = event.orientation.x;
 
     // could potentially implement a method that uses both ultrasonics and otos
     if (use_ult) {
+        this->ult_ps.update(this->tilt);
         this->posv = this->ult_ps.get_posv();
     }
     if (use_otos) {

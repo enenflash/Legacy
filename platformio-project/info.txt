@@ -1,2 +1,3 @@
-Create new platformio project
-Download all of this folder's contents and put in respective folders
+Create new platformio project (to auto generate folders)
+Add all contents in include, lib and src
+Copy and paste platformio.ini
