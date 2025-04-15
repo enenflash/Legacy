@@ -1,17 +1,13 @@
-# run this file
-# change the values of whites in order of TCRT 1 to 16
-# (also note when pygame draws the sensors its flipped horizontally)
-# green lines are the activated sensors (white lines are not activated)
-# red shows the calculated angle and distance
-
 import pygame as pg
-from ls_calc import *
+from ls_calc_isabelle import *
 
 pg.init()
 
+# change these values
+# in order of TCRT 1 to 16
 whites = [
     False, True, True, True,
-    False, False, False, False,
+    False, False, True, False,
     False, False, False, True,
     True, True, False, False
 ]
@@ -25,7 +21,7 @@ y = math.sin(result[0]*math.pi/180)*result[1]
 running = True
 screen_info = pg.display.Info()
 DIM = screen_info.current_h
-SCALE = 150
+SCALE = 4
 screen = pg.display.set_mode((DIM, DIM))
 clock = pg.time.Clock()
 delta_time = 1

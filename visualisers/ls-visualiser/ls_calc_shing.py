@@ -1,25 +1,13 @@
-# shing code translated on 5th april
-# run main.py to test
-
 import math
 
 sensor_coordinates = [
-    [math.cos(math.pi), math.sin(math.pi)],
-    [math.cos(-7 * math.pi / 8.0), math.sin(-7 * math.pi / 8.0)],
-    [math.cos(-3 * math.pi / 4.0), math.sin(-3 * math.pi / 4.0)],
-    [math.cos(-5 * math.pi / 8.0), math.sin(-5 * math.pi / 8.0)],
-    [math.cos(-1 * math.pi / 2.0), math.sin(-1 * math.pi / 2.0)],
-    [math.cos(-3 * math.pi / 8.0), math.sin(-3 * math.pi / 8.0)],
-    [math.cos(-1 * math.pi / 4.0), math.sin(-1 * math.pi / 4.0)],
-    [math.cos(-1 * math.pi / 8.0), math.sin(-1 * math.pi / 8.0)],
-    [math.cos(0.0), math.sin(0.0)],
-    [math.cos(1 * math.pi / 8.0), math.sin(1 * math.pi / 8.0)],
-    [math.cos(1 * math.pi / 4.0), math.sin(1 * math.pi / 4.0)],
-    [math.cos(3 * math.pi / 8.0), math.sin(3 * math.pi / 8.0)],
-    [math.cos(1 * math.pi / 2.0), math.sin(1 * math.pi / 2.0)],
-    [math.cos(5 * math.pi / 8.0), math.sin(5 * math.pi / 8.0)],
-    [math.cos(3 * math.pi / 4.0), math.sin(3 * math.pi / 4.0)],
-    [math.cos(7 * math.pi / 8.0), math.sin(7 * math.pi / 8.0)],
+    [math.cos(angle*math.pi/180)*68, math.sin(angle*math.pi/180)*68]
+    for angle in [
+        180, -157.5, -135, -112.5,
+        -90, -67.5, -45, -22.5,
+        0, 22.5, 45, 67.5,
+        90, 112.5, 135, 157.5
+    ]
 ]
 
 def find_line(whites: list[bool]) -> tuple[float, float]:
