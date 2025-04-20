@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "blink_test",
-    "project_version":    "2bb648a-dirty",
+    "project_version":    "65dea20-dirty",
     "project_path":       "C:/Users/yuets/OneDrive/Documents/coding/Legacy/esp_codes/esp_idf/blink_test",
     "idf_path":           "C:/Users/yuets/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/yuets/OneDrive/Documents/coding/Legacy/esp_codes/esp_idf/blink_test/build",
