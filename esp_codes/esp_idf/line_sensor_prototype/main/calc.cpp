@@ -54,6 +54,6 @@ std::array<float, 2> find_line(std::array<bool, CHANNEL_NUM> whites, std::array<
         }
 
     }
-    float distance = std::accumulate(distances.begin(), distances.end(), 0.0f);
-    return {(float)(angle * 180.0f/M_PI), distance};
+    float distance = std::accumulate(distances.begin(), distances.end(), 0.0f) / distances.size();
+    return {(float)(angle), distance};
 }

@@ -87,7 +87,7 @@ extern "C" void app_main(void) {
         };
         bool led_on = false;
         for (uint8_t i = 0; i < CHANNEL_NUM; i++) {
-            if (tcrt_values[i] <= 2000) {
+            if (tcrt_values[i] <= 800) {
                 led_on = true;
                 break;
             }
@@ -106,7 +106,7 @@ extern "C" void app_main(void) {
         //     }
         //     esp_restart();
         // }
-        std::array<bool, CHANNEL_NUM> whites = find_white(tcrt_values, 2000);
+        std::array<bool, CHANNEL_NUM> whites = find_white(tcrt_values, 800);
         // std::array<bool, CHANNEL_NUM> whites = {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
         std::array<float, 2> result = find_line(whites, sensor_vectors);
 
@@ -118,9 +118,10 @@ extern "C" void app_main(void) {
         // printf("%s", "should have writen the stuff");
 
         // for (int i = 0; i < CHANNEL_NUM; i++) {
-        //     printf("%1d: %1d ", i + 1, whites[i]);
+        //     printf("%1d: %ld ", i + 1, tcrt_values[i]);
         // }
-        printf("angle: %.5f, distance: %4f", result[0], result[1]);
+        printf("%f %f ", send_value[0], send_value[1]);
+        // printf("angle: %.5f, distance: %4f", result[0], result[1]);
         printf("\n");
         fflush(stdout);
     }
