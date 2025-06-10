@@ -116,11 +116,13 @@ extern "C" void app_main(void) {
         send_float_array_as_bytes(send_value, 2);
         uart_wait_tx_done(UART_PORT_NUM, pdMS_TO_TICKS(100));
         // printf("%s", "should have writen the stuff");
-
+        for (int i = 0; i < CHANNEL_NUM; i++) {
+            printf("%d, ", whites[i]);
+        }
         // for (int i = 0; i < CHANNEL_NUM; i++) {
         //     printf("%1d: %ld ", i + 1, tcrt_values[i]);
         // }
-        printf("%f %f ", send_value[0], send_value[1]);
+        // printf("%f %f ", send_value[0], send_value[1]);
         // printf("angle: %.5f, distance: %4f", result[0], result[1]);
         printf("\n");
         fflush(stdout);
