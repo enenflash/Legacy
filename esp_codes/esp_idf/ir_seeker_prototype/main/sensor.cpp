@@ -94,6 +94,6 @@ std::array<float, 4> SensorRing::advancedRead() {
     }
     sum_vector.i /= 16;
     sum_vector.j /= 16;
-    PolarVector ball_vector = {.a = atan2(sum_vector.j, sum_vector.i), .m = sqrtf(pow(sum_vector.i, 2) + pow(sum_vector.j, 2))};
+    PolarVector ball_vector = {.a = fmodf(atan2(sum_vector.j, sum_vector.i) + 2 * M_PI, 2 * M_PI), .m = sqrtf(pow(sum_vector.i, 2) + pow(sum_vector.j, 2))};
     return {ball_vector.a, ball_vector.m, sum_vector.i, sum_vector.j};
 }
