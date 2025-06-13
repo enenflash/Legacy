@@ -27,7 +27,8 @@ class IRCalculator:
         ]
 
     def calc_final_vector(self, ir_vectors:list[Vector]) -> Vector:
-        filtered_vectors = [ir_vector for ir_vector in ir_vectors if ir_vector.magnitude != 0]
+        # filtered_vectors = [ir_vector for ir_vector in ir_vectors if ir_vector.magnitude != 0]
+        filtered_vectors = self.ir_vectors[0:15]
         sum_ir_vectors = Vector.sum_vectors(filtered_vectors)
         return sum_ir_vectors
     

@@ -1,0 +1,3 @@
+/home/robot/Legacy/Computer-Vision/cpp/find_goal/build/CMakeFiles/find_goal.dir
+/home/robot/Legacy/Computer-Vision/cpp/find_goal/build/CMakeFiles/edit_cache.dir
+/home/robot/Legacy/Computer-Vision/cpp/find_goal/build/CMakeFiles/rebuild_cache.dir
