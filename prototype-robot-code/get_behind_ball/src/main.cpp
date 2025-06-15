@@ -47,12 +47,12 @@ float find_move_angle(PositionSystem posv, Vector goal_pos, float tollerance, fl
   }
   if (ball_angle > goal_vec.heading() - tollerance && ball_angle < goal_vec.heading() + tollerance) {
     // return goal_vec.heading();
-    float current_i = posv.get_posv().i;
-    float current_j = posv.get_posv().j;
-    if (current_i > goal_pos.i - 20 && current_i < goal_pos.i + 20 && current_j> goal_pos.j - 20) {
-      DF.stop(); // stop dribbler if close to goal
-      return 0; // move forward
-    }
+    // float current_i = posv.get_posv().i;
+    // float current_j = posv.get_posv().j;
+    // if (current_i > goal_pos.i - 20 && current_i < goal_pos.i + 20 && current_j> goal_pos.j - 20) {
+    //   DF.stop(); // stop dribbler if close to goal
+    //   return 0; // move forward
+    // }
     DF.run(); // run dribbler
     return goal_vec.heading(); // move forward
   }
@@ -147,7 +147,7 @@ void loop() {
   // .display() returns std::string
   String posv_str = String(posv.display().c_str()); // must convert from std::string to String (arduino)
   
-    Vector mv_vec = pos_sys.get_relative_to((Vector){91, 180});
+    Vector mv_vec = pos_sys.get_relative_to((Vector){91, 200});
 
   
   if (digitalRead(BTN_1) == HIGH) {
@@ -189,7 +189,7 @@ void loop() {
   // Serial.print(" ");
   // Serial.println(ir_sensor.read_success);
 
-  Vector goal_vec = pos_sys.get_relative_to((Vector){91, 180});
+  Vector goal_vec = pos_sys.get_relative_to((Vector){91, 200});
 
   // convert unit circle heading to rotation
   float rotation = goal_vec.heading() * 180 / PI - heading - 90; // convert to degrees
@@ -239,8 +239,17 @@ void loop() {
   if (headless) mv_angle -= heading*PI/180;
   Serial.print(line_sensor.get_distance());
   Serial.print(" ");
-  Serial.println(line_sensor.get_angle() * 180 / PI);
-
+  Serial.print(line_sensor.get_angle() * 180 / PI);
+  Serial.print(" ");
+  Serial.print(ir_sensor.get_angle() * 180 / PI);
+  Serial.print(" ");
+  Serial.print(ir_sensor.get_magnitude());
+  Serial.print(" ");
+  Serial.print(posv.i);
+  Serial.print(" ");
+  Serial.print(posv.j); 
+  Serial.print(" ");
+  Serial.print(mv_angle * 180 / PI);
   motor_ctrl.run_motors(speed, mv_angle, rotation); // run motors 50 speed, angle (radians), rotation
   // motor_ctrl.run_raw(-100, -100, 100, 100); // run motors raw
   // motor_ctrl.stop_motors(); // stop all motors

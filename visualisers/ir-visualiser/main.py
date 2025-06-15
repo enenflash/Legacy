@@ -7,7 +7,7 @@
 import pygame as pg
 from ir_calc import *
 import serial
-port = 'COM15'
+port = 'COM10'
 baud_rate = 115200  # Adjust this if your device uses a different rate
 timeout = 1  # seconds
 pg.init()

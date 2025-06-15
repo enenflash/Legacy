@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "line_sensor_prototype",
-    "project_version":    "b2ac160-dirty",
+    "project_version":    "1f67c6e-dirty",
     "project_path":       "C:/Users/yuets/OneDrive/Documents/coding/Legacy/esp_codes/esp_idf/line_sensor_prototype",
     "idf_path":           "C:/Users/yuets/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/yuets/OneDrive/Documents/coding/Legacy/esp_codes/esp_idf/line_sensor_prototype/build",
