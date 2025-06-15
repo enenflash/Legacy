@@ -1,1 +1,3 @@
 /Computer-Vision/cpp/find_goal/build/
+**/build/
+**/__pycache__/
