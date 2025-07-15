@@ -20,8 +20,9 @@ typedef struct struct_message {
 
 struct_message msg = {1, 23.5f};
 
-// Broadcast MAC (special address)
-uint8_t broadcast_mac[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+// sending MAC (special address)
+// david: D8:3B:DA:C6:D1:D4
+uint8_t send_mac[] = {0xD8, 0x3B, 0xDA, 0xC6, 0xD1, 0xD4};
 
 // Callback: when data is sent
 void on_data_sent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -63,7 +64,7 @@ extern "C" void app_main() {
 
     // Add broadcast peer explicitly (for compatibility)
     esp_now_peer_info_t peerInfo = {};
-    memcpy(peerInfo.peer_addr, broadcast_mac, 6);
+    memcpy(peerInfo.peer_addr, send_mac, 6);
     peerInfo.channel = 1;  // same channel as set above
     peerInfo.encrypt = false;
     esp_err_t ret = esp_now_add_peer(&peerInfo);
@@ -78,10 +79,14 @@ extern "C" void app_main() {
 
     while (true) {
         msg.temperature += 0.1f;
-        esp_err_t send_ret = esp_now_send(broadcast_mac, (uint8_t*)&msg, sizeof(msg));
+        esp_err_t send_ret = esp_now_send(send_mac, (uint8_t*)&msg, sizeof(msg));
         if (send_ret != ESP_OK) {
             ESP_LOGE(TAG, "Send failed: %d", send_ret);
         }
         vTaskDelay(pdMS_TO_TICKS(2000));
+        uint8_t mac[6];
+        esp_read_mac(mac, ESP_MAC_WIFI_STA);
+        printf("this MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     }
 }

@@ -8,7 +8,8 @@ extern "C" {
     #include "esp_adc/adc_continuous.h"
     #include "driver/uart.h"
     // #include "driver/gpio.h"
-    #include "esp_wifi.h"
+    // #include "esp_wifi.h"
+    #include "esp_timer.h"
     #include "nvs_flash.h"
 }
 // #include "pins.hpp"
@@ -62,7 +63,8 @@ extern "C" void app_main(void) {
     uint8_t result[EXAMPLE_READ_LEN];
     adc_digi_output_data_t *output_data = NULL;
     int32_t adc_values[2][16] = {{-1}}; // [unit][channel], safe with overprovisioned index
-
+    int64_t start_time = esp_timer_get_time();
+    int64_t end_time = esp_timer_get_time();
 
     while (true) {
         ring.readRaw(result, adc_values, output_data);
@@ -119,6 +121,9 @@ extern "C" void app_main(void) {
         for (int i = 0; i < CHANNEL_NUM; i++) {
             printf("%d, ", whites[i]);
         }
+
+        end_time = esp_timer_get_time();
+        printf("time: %lld ms", (end_time - start_time) / 1000);
         // for (int i = 0; i < CHANNEL_NUM; i++) {
         //     printf("%1d: %ld ", i + 1, tcrt_values[i]);
         // }
@@ -126,6 +131,8 @@ extern "C" void app_main(void) {
         // printf("angle: %.5f, distance: %4f", result[0], result[1]);
         printf("\n");
         fflush(stdout);
+        
+        start_time = esp_timer_get_time();
     }
         // vTaskDelay(pdMS_TO_TICKS(15));
 }
