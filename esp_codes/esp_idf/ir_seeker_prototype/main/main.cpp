@@ -14,7 +14,7 @@ extern "C" {
 #define TX 43
 #define RX 44
 #define UART_PORT_NUM UART_NUM_1
-#define BAUD_RATE 115200
+#define BAUD_RATE 921600
 #define UART_BUF_SIZE (2048)
 void init_uart() {
     uart_config_t uart_config = {

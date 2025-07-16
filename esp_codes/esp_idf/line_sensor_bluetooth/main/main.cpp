@@ -167,6 +167,17 @@ extern "C" void app_main(void) {
     int32_t adc_values[2][16] = {{-1}}; // [unit][channel], safe with overprovisioned index
     int64_t start_time = esp_timer_get_time();
     int64_t end_time = esp_timer_get_time();
+    int32_t not_received = 0;
+
+    BotData received_data = {
+        .heading = 0.0,
+        .pos_vector = {0.0, 0.0},
+        .ball_strength = 0.0,
+        .ball_angle = 0.0,
+        .line_vector = {0.0, 0.0},
+        .velocity = {0.0, 0.0}
+    };
+
 
     uint8_t other_mac[6];
     find_other_mac_address(other_mac);
@@ -233,17 +244,27 @@ extern "C" void app_main(void) {
             // printf("pos %.2f %.2f \n", teensy_data.pos_vector.i, teensy_data.pos_vector.j);
         }
 
-        BotData received_data = {
-            .heading = 0.0,
-            .pos_vector = {0.0, 0.0},
-            .ball_strength = 0.0,
-            .ball_angle = 0.0,
-            .line_vector = {0.0, 0.0},
-            .velocity = {0.0, 0.0}
-        };
+        
         if (data_received) {
             received_data = incoming_data;
             data_received = false;
+            not_received = 0;
+        }
+        else {
+            not_received++;
+        }
+
+        if (not_received > 5) {
+            received_data = {
+                .heading = 0.0,
+                .pos_vector = {0.0, 0.0},
+                .ball_strength = 0.0,
+                .ball_angle = 0.0,
+                .line_vector = {0.0, 0.0},
+                .velocity = {0.0, 0.0}
+            };
+            not_received = 5;
+            // printf("probably disconnected");
         }
         uart_write_bytes(UART_PORT_NUM, "e", 1);
         // send_int_array_as_bytes(tcrt_values, CHANNEL_NUM);
@@ -254,7 +275,7 @@ extern "C" void app_main(void) {
         
         // printf("%d", read_teensy(&teensy_data));
         end_time = esp_timer_get_time();
-        printf(" incoming xy %.2f %.2f ", incoming_data.pos_vector.i, incoming_data.pos_vector.j); // ise this to see if it is receiving data
+        printf(" received xy %.2f %.2f not_received %ld ", received_data.pos_vector.i, received_data.pos_vector.j, not_received); // ise this to see if it is receiving data
         printf("time: %lld ms", (end_time - start_time) / 1000);
         // for (int i = 0; i < CHANNEL_NUM; i++) {
         //     printf("%1d: %ld ", i + 1, tcrt_values[i]);
