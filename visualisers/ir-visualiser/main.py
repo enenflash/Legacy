@@ -7,7 +7,7 @@
 import pygame as pg
 from ir_calc import *
 import serial
-port = 'COM6'
+port = 'COM27'
 baud_rate = 115200  # Adjust this if your device uses a different rate
 timeout = 1  # seconds
 pg.init()
@@ -31,13 +31,13 @@ test_set_4 = [
     0, 127, 198, 181, 160, 108, 0, 87, 0, 0, 0, 0, 0, 123, 0, 0,
 ]
 test_set_5 = [
-    100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    100, 100, 100, 100, 100, 10, 10, 20, 10, 5, 2, 3, 5, 2, 100, 100,
 ]
 
 ir_calc = IRCalculator()
 
 # print("\ntest set 1")
-ir_calc.update(test_set_4)
+ir_calc.update(test_set_5)
 print("angle", ir_calc.angle)
 print("angle degrees", ir_calc.angle*180/math.pi)
 print("magnitude", ir_calc.magnitude)
@@ -76,8 +76,9 @@ while running:
             try:
                 # Split line into list of strings, remove spaces, convert to integers
                 values = [int(x.strip()) for x in line.split(',') if x.strip()]
-                if len(values) == 16:
+                if len(values) == 17:
                     print("Received:", values)
+                    values.pop(16)
                     ir_calc.update(values)
                 else:
                     print(f"Ignored: wrong number of values ({len(values)}):", values)

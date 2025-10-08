@@ -96,7 +96,7 @@ extern "C" void app_main(void) {
         for (uint8_t i = 0; i < 16; i++) {
             printf("%.0f, ", irseeker.sensor_vectors[i].m);
         }
-        // printf("%.0f, ", send_array[0]);
+        printf("%.0f, ", send_array[0]);
         // printf("%.0f, ", send_array[1]);
         printf("%s", "\n");
         // vTaskDelay(pdMS_TO_TICKS(100));

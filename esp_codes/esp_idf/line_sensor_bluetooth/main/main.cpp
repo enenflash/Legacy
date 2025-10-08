@@ -35,6 +35,7 @@ struct BotData {
     float ball_angle;
     Vector line_vector;
     Vector velocity;
+    int yellow_x;
 };
 
 BotData incoming_data = {0, {0, 0}, 0, 0, {0, 0}, {0, 0}};
@@ -160,7 +161,7 @@ extern "C" void app_main(void) {
     std::array<float, 16> sensor_angles = {180, -157.5, -135, -112.5, -90, -67.5, -45, -22.5, 0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5};
     std::array<MathVector, 16> sensor_vectors;
     for (u_int8_t i = 0; i < 16; i++) {
-        sensor_vectors[i] = MathVectorFromArgument(68, sensor_angles[i] * M_PI/180.0);
+        sensor_vectors[i] = MathVectorFromArgument(6.8, sensor_angles[i] * M_PI/180.0);
     }
     uint8_t result[EXAMPLE_READ_LEN];
     adc_digi_output_data_t *output_data = NULL;
@@ -275,11 +276,11 @@ extern "C" void app_main(void) {
         
         // printf("%d", read_teensy(&teensy_data));
         end_time = esp_timer_get_time();
-        printf(" received xy %.2f %.2f not_received %ld ", received_data.pos_vector.i, received_data.pos_vector.j, not_received); // ise this to see if it is receiving data
+        // printf(" received xy %.2f %.2f not_received %ld ", received_data.pos_vector.i, received_data.pos_vector.j, not_received); // use this to see if it is receiving data
         printf("time: %lld ms", (end_time - start_time) / 1000);
-        // for (int i = 0; i < CHANNEL_NUM; i++) {
-        //     printf("%1d: %ld ", i + 1, tcrt_values[i]);
-        // }
+        for (int i = 0; i < CHANNEL_NUM; i++) {
+            printf("%1d: %ld ", i + 1, tcrt_values[i]);
+        }
         // printf("%f %f ", send_value[0], send_value[1]);
         // printf("angle: %.5f, distance: %4f", result[0], result[1]);
         printf("\n");
